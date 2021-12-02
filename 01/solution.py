@@ -15,7 +15,7 @@ diffs = [dep - dep_os for dep, dep_os in zip(depths[:-1], depths[1:])]
 print(sum(1 for i in diffs if i < 0))
 
 # part 1, oneliner, noting that booleans can be parsed as ints
-print(sum(x < y for x, y in zip(depths, depths[1:])))
+print(sum(a < b for a, b in zip(depths, depths[1:])))
 
 # part 2, consider a sliding window of three measurements
 mov_sum = [d1 + d2 + d3 for d1, d2, d3 in zip(depths[2:], depths[1:-1], depths[:-2])]
@@ -26,4 +26,4 @@ print(sum(1 for i in diffs if i < 0))
 # abc   <- window 1
 #  bcd  <- window 2
 # the only difference between these windows is a and d, since b and c are added to both
-print(sum(x < y for x, y in zip(depths, depths[3:])))
+print(sum(a < d for a, d in zip(depths, depths[3:])))
