@@ -1,81 +1,50 @@
 input = open("04/input.txt").read().split("\n\n")
-draws = input[0]
+draws = input[0].split(",")
 boards = input[1:]
-
-
-def print_board(board):
-    for row in board:
-        print(row)
-
 
 clean_boards = []
 for board in boards:
-    board = board.replace("\n ", "\n").replace(" \n", "\n").replace("  ", " ").strip()
-    board_arr = board.split("\n")
-    board_arr = [a.split(" ") for a in board_arr]
+    board = board.replace("\n ", "\n").replace("  ", " ").strip()
+    board_arr = [a.split(" ") for a in board.split("\n")]
     clean_boards.append(board_arr)
 
 
-testWinR = [
-    ["1", "2", "3", "4", "5"],
-    ["x", "x", "x", "x", "x"],
-    ["6", "7", "8", "x", "9"],
-    ["x", "x", "10", "11", "x"],
-    ["12", "x", "13", "x", "14"],
-]
-testWinC = [
-    ["1", "2", "3", "x", "5"],
-    ["x", "x", "x", "x", "4"],
-    ["6", "7", "8", "x", "9"],
-    ["x", "x", "10", "x", "x"],
-    ["12", "x", "13", "x", "14"],
-]
-
-
-def board_wins(board):
-    # check for row wins
-    for row in board:
-        sols = set(row)
-        if len(sols) == 1 and "x" in sols:
+def check_win(board):
+    for row in board:  # check for row wins
+        if all([char == "x" for char in row]):
             return True
-
-    # check for col wins
-    for col_ind in range(0, 5):
-        sols = []
-        for row in board:
-            sols.append(row[col_ind])
-        sols = set(sols)
-        if len(sols) == 1 and "x" in sols:
+    for col_ind in range(5):  # check for col wins
+        col = [row[col_ind] for row in board]
+        if all([char == "x" for char in col]):
             return True
     return False
 
 
-draws = draws.split(",")
-
-
-def conduct_drawing():
-    total = 0
-    counter = 0
+def bingo_sim():
+    winning_boards = []
+    results = []
     for draw in draws:
-        print(f"removing draw: {draw}")
-        # update boards
-        for i, board in enumerate(clean_boards):
+        print(f"Drawing... {draw}")
+        for i, board in enumerate(clean_boards):  # update boards
             for j, row in enumerate(board):
                 for k, spot in enumerate(row):
                     if spot == draw:
                         clean_boards[i][j][k] = "x"
 
-        # check for winners
-        for ind, board in enumerate(clean_boards):
-            if board_wins(board):
+        for ind, board in enumerate(clean_boards):  # check for winners
+            if check_win(board) and ind not in winning_boards:
+                total = 0
+                winning_boards.append(ind)
                 for row in board:
                     for spot in row:
                         if spot != "x":
                             total += int(spot)
-                print(f"found a winner {ind}")
-                return draw, total
+                print(f"Board {ind+1} won with draw {draw} and total {total}")
+                results.append((ind, int(draw), total))
+                if len(winning_boards) == len(clean_boards):
+                    return results
 
 
-result = conduct_drawing()
-print(result)
-print(result[0] * result[1])
+result = bingo_sim()
+print(result[0][1] * result[0][2])  # part one
+print(result[-1][1] * result[-1][2])  # part two
