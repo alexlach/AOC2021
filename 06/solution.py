@@ -10,8 +10,8 @@ def sim_fish(fish_dict, days):
         fish_dict_update = {key: 0 for key in [0, 1, 2, 3, 4, 5, 6, 7, 8]}
         for age, count in fish_dict.items():
             if age == 0:
-                fish_dict_update[8] += count  # same fish
-                fish_dict_update[6] += count  # babby fish
+                fish_dict_update[8] += count  # same fish resets
+                fish_dict_update[6] += count  # cute babby lanternfish
             else:
                 fish_dict_update[age - 1] += count
         fish_dict = fish_dict_update
@@ -36,3 +36,6 @@ print(sum(val for val in sim_fish(fish_dict, 256).values()))  # part 2
 #             fishies_updated.append(fish - 1)
 #     day1_fishies = fishies_updated
 # print(len(fishies_updated))
+# I also tried simulating one of each fish using the dumb method, but that was also too slow
+# the point is you can't do one action per individual fish, you have to batch them
+# but much better to batch through the whole steps simulation than just at the start
